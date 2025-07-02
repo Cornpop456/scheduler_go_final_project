@@ -10,29 +10,29 @@ import (
 	"github.com/Cornpop456/scheduler_go_final_project/tests"
 )
 
-const WEB_DIR = "web"
+const webDir = "web"
 
-var PORT = ":" + strconv.Itoa(tests.Port)
-var DB_FILE = tests.DBFile
+var port = ":" + strconv.Itoa(tests.Port)
+var dbFile = tests.DBFile
 
 func main() {
 	if os.Getenv("TODO_PORT") != "" {
-		PORT = ":" + os.Getenv("TODO_PORT")
+		port = ":" + os.Getenv("TODO_PORT")
 	}
 
 	if os.Getenv("TODO_DBFILE") != "" {
-		DB_FILE = os.Getenv("TODO_DBFILE")
+		dbFile = os.Getenv("TODO_DBFILE")
 	}
 
-	err := db.Init(DB_FILE)
+	err := db.Init(dbFile)
 
 	if err != nil {
 		log.Fatalf("Error initializing database: %v", err)
 	}
 
-	http.Handle("/", http.FileServer(http.Dir(WEB_DIR)))
+	http.Handle("/", http.FileServer(http.Dir(webDir)))
 
-	log.Println("Server running on http://localhost" + PORT)
+	log.Println("Server running on http://localhost" + port)
 
-	log.Fatal(http.ListenAndServe(PORT, nil))
+	log.Fatal(http.ListenAndServe(port, nil))
 }

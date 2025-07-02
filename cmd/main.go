@@ -6,6 +6,7 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/Cornpop456/scheduler_go_final_project/pkg/api"
 	"github.com/Cornpop456/scheduler_go_final_project/pkg/db"
 	"github.com/Cornpop456/scheduler_go_final_project/tests"
 )
@@ -29,6 +30,8 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error initializing database: %v", err)
 	}
+
+	api.Init()
 
 	http.Handle("/", http.FileServer(http.Dir(webDir)))
 

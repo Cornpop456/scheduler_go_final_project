@@ -162,7 +162,7 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 			}
 		}
 	default:
-		return "", fmt.Errorf("invalid repeat format: %s", repeatParts[0])
+		return "", fmt.Errorf("unsupported letter: %s", repeatParts[0])
 	}
 
 	repeatType := repeatParts[0]

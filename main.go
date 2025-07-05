@@ -4,17 +4,15 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strconv"
 
 	"github.com/Cornpop456/scheduler_go_final_project/pkg/api"
 	"github.com/Cornpop456/scheduler_go_final_project/pkg/db"
-	"github.com/Cornpop456/scheduler_go_final_project/tests"
 )
 
 const webDir = "web"
 
-var port = ":" + strconv.Itoa(tests.Port)
-var dbFile = tests.DBFile
+var port = ":7540"
+var dbFile = "scheduler.db"
 
 func main() {
 	if os.Getenv("TODO_PORT") != "" {
@@ -33,7 +31,7 @@ func main() {
 
 	api.Init()
 
-	http.Handle("/", http.FileServer(http.Dir(webDir)))
+	http.Handle("GET /", http.FileServer(http.Dir(webDir)))
 
 	log.Println("Server running on http://localhost" + port)
 

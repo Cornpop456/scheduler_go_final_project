@@ -83,5 +83,6 @@ func addTaskHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.WriteHeader(http.StatusCreated)
 	writeJson(w, OkResponse{ID: id})
 }

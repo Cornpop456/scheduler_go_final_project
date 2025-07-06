@@ -13,11 +13,10 @@ type TasksResp struct {
 func tasksHandler(w http.ResponseWriter, r *http.Request) {
 	tasks, err := db.Tasks(50)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		writeJson(w, map[string]string{"error": "Failed to retrieve tasks"})
+		writeError(w, http.StatusInternalServerError, "Error fetching tasks")
 		return
 	}
-	writeJson(w, TasksResp{
+	writeJson(w, http.StatusOK, tasksResponse{
 		Tasks: tasks,
 	})
 }

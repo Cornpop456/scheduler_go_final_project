@@ -1,6 +1,12 @@
 package db
 
-import "database/sql"
+import (
+	"database/sql"
+	"time"
+)
+
+const searchDateLayout = "02.01.2006"
+const timeLayout = "20060102"
 
 type Task struct {
 	ID      string `json:"id"`
@@ -28,10 +34,22 @@ func AddTask(task *Task) (int64, error) {
 	return id, err
 }
 
-func Tasks(limit int) ([]*Task, error) {
-	query := `SELECT * FROM scheduler ORDER BY date LIMIT :limit`
+func Tasks(limit int, search string) ([]*Task, error) {
+	query := `SELECT * FROM scheduler WHERE title LIKE :search OR comment LIKE :search ORDER BY date LIMIT :limit`
+	queryDate := `SELECT * FROM scheduler WHERE date == :date ORDER BY date LIMIT :limit`
 
-	rows, err := db.Query(query, sql.Named("limit", limit))
+	var rows *sql.Rows
+	var err error
+
+	t, err := time.Parse(searchDateLayout, search)
+
+	if err == nil {
+		search = t.Format(timeLayout)
+		rows, err = db.Query(queryDate, sql.Named("date", search), sql.Named("limit", limit))
+	} else {
+		search = "%" + search + "%"
+		rows, err = db.Query(query, sql.Named("search", search), sql.Named("limit", limit))
+	}
 
 	if err != nil {
 		return nil, err

@@ -11,7 +11,9 @@ type TasksResp struct {
 }
 
 func tasksHandler(w http.ResponseWriter, r *http.Request) {
-	tasks, err := db.Tasks(50)
+	search := r.FormValue("search")
+
+	tasks, err := db.Tasks(50, search)
 	if err != nil {
 		writeError(w, http.StatusInternalServerError, "Error fetching tasks")
 		return

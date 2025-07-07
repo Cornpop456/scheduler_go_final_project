@@ -2,11 +2,15 @@ package db
 
 import (
 	"database/sql"
+	"errors"
 	"time"
 )
 
 const searchDateLayout = "02.01.2006"
 const timeLayout = "20060102"
+
+var ErrTaskNotFound = errors.New("task not found")
+var ErrWrongId = errors.New("wrong id for task")
 
 type Task struct {
 	ID      string `json:"id"`
@@ -32,6 +36,51 @@ func AddTask(task *Task) (int64, error) {
 	}
 
 	return id, err
+}
+
+func GetTask(id string) (*Task, error) {
+	query := `SELECT * FROM scheduler WHERE id = :id`
+	row := db.QueryRow(query, sql.Named("id", id))
+
+	task := &Task{}
+
+	if err := row.Scan(&task.ID, &task.Date, &task.Title, &task.Comment, &task.Repeat); err != nil {
+		if err == sql.ErrNoRows {
+			return nil, ErrTaskNotFound
+		}
+
+		return nil, err
+	}
+
+	return task, nil
+}
+
+func UpdateTask(task *Task) error {
+	query := `UPDATE scheduler SET date = :date, title = :title, comment = :comment, repeat = :repeat WHERE id = :id`
+
+	res, err := db.Exec(query,
+		sql.Named("id", task.ID),
+		sql.Named("date", task.Date),
+		sql.Named("title", task.Title),
+		sql.Named("comment", task.Comment),
+		sql.Named("repeat", task.Repeat),
+	)
+
+	if err != nil {
+		return err
+	}
+
+	count, err := res.RowsAffected()
+
+	if err != nil {
+		return err
+	}
+
+	if count == 0 {
+		return ErrWrongId
+	}
+
+	return nil
 }
 
 func Tasks(limit int, search string) ([]*Task, error) {

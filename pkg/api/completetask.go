@@ -34,7 +34,7 @@ func completeTaskHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		writeJson(w, http.StatusOK, struct{}{})
+		writeJson(w, http.StatusOK, emptyResponse{})
 		return
 	}
 

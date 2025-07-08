@@ -18,6 +18,10 @@ func getTaskHandler(w http.ResponseWriter, r *http.Request) {
 	task, err := db.GetTask(id)
 
 	if err != nil {
+		if err == db.ErrWrongId {
+			writeError(w, http.StatusNotFound, "Task not found")
+			return
+		}
 		writeError(w, http.StatusInternalServerError, fmt.Sprintf("Error fetching task: %v", err))
 		return
 	}

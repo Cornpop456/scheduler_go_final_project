@@ -9,7 +9,6 @@ import (
 const searchDateLayout = "02.01.2006"
 const timeLayout = "20060102"
 
-var ErrTaskNotFound = errors.New("task not found")
 var ErrWrongId = errors.New("wrong id for task")
 
 type Task struct {
@@ -46,7 +45,7 @@ func GetTask(id string) (*Task, error) {
 
 	if err := row.Scan(&task.ID, &task.Date, &task.Title, &task.Comment, &task.Repeat); err != nil {
 		if err == sql.ErrNoRows {
-			return nil, ErrTaskNotFound
+			return nil, ErrWrongId
 		}
 
 		return nil, err
@@ -65,6 +64,53 @@ func UpdateTask(task *Task) error {
 		sql.Named("comment", task.Comment),
 		sql.Named("repeat", task.Repeat),
 	)
+
+	if err != nil {
+		return err
+	}
+
+	count, err := res.RowsAffected()
+
+	if err != nil {
+		return err
+	}
+
+	if count == 0 {
+		return ErrWrongId
+	}
+
+	return nil
+}
+
+func UpdateDate(next string, id string) error {
+	query := `UPDATE scheduler SET date = :date WHERE id = :id`
+
+	res, err := db.Exec(query,
+		sql.Named("id", id),
+		sql.Named("date", next),
+	)
+
+	if err != nil {
+		return err
+	}
+
+	count, err := res.RowsAffected()
+
+	if err != nil {
+		return err
+	}
+
+	if count == 0 {
+		return ErrWrongId
+	}
+
+	return nil
+}
+
+func DeleteTask(id string) error {
+	query := `DELETE FROM scheduler WHERE id = :id`
+
+	res, err := db.Exec(query, sql.Named("id", id))
 
 	if err != nil {
 		return err

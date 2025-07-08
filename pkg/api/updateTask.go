@@ -3,6 +3,7 @@ package api
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"strings"
@@ -66,9 +67,13 @@ func updateTaskHandler(w http.ResponseWriter, r *http.Request) {
 	err = db.UpdateTask(&task)
 
 	if err != nil {
+		if errors.Is(err, db.ErrWrongId) {
+			writeError(w, http.StatusBadRequest, "Task not found")
+			return
+		}
 		writeError(w, http.StatusInternalServerError, fmt.Sprintf("Error updating task: %v", err))
 		return
 	}
 
-	writeJson(w, http.StatusOK, struct{}{})
+	writeJson(w, http.StatusOK, emptyResponse{})
 }

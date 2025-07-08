@@ -27,13 +27,17 @@ ___
    git clone https://github.com/Cornpop456/scheduler_go_final_project.git
    cd scheduler_go_final_project
    ```
+2. **Перейдите в ветку `develop`**
+   ```bash
+   git checkout develop
+   ```
 
-2. **Установите зависимости:**
+3. **Установите зависимости:**
    ```bash
    go mod download
    ```
 
-3. **Запустите сервер:**
+4. **Запустите сервер:**
    ```bash
    go run main.go
    ```
@@ -42,7 +46,7 @@ ___
    go build -o server . && ./server
    ```
 
-4. **Откройте браузер и перейдите по адресу:**
+5. **Откройте браузер и перейдите по адресу:**
    ```bash
    http://localhost:7540
    ```

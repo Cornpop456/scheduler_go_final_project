@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/golang-jwt/jwt"
+	"github.com/golang-jwt/jwt/v5"
 )
 
 type authRequest struct {

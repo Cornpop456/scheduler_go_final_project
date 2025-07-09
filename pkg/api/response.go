@@ -17,6 +17,10 @@ type addTaskResponse struct {
 	ID int64 `json:"id"`
 }
 
+type authSuccessResponse struct {
+	Token string `json:"token"`
+}
+
 type errorResponse struct {
 	ErrorMessage string `json:"error"`
 }

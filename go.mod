@@ -3,6 +3,7 @@ module github.com/Cornpop456/scheduler_go_final_project
 go 1.24.0
 
 require (
+	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/jmoiron/sqlx v1.4.0
 	github.com/stretchr/testify v1.10.0
 	modernc.org/sqlite v1.38.0

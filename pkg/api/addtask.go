@@ -36,7 +36,7 @@ func addTaskHandler(w http.ResponseWriter, r *http.Request) {
 	nextDate := ""
 
 	if task.Date == "" {
-		task.Date = nowDate.Format(timeLayout)
+		task.Date = nowDate.Format(db.TimeLayout)
 	}
 
 	if task.Repeat != "" {
@@ -48,7 +48,7 @@ func addTaskHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	taskDate, err := time.Parse(timeLayout, task.Date)
+	taskDate, err := time.Parse(db.TimeLayout, task.Date)
 
 	if err != nil {
 		writeError(w, http.StatusBadRequest, fmt.Sprintf("Invalid date format: %v", err))
@@ -56,10 +56,10 @@ func addTaskHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if afterNow(nowDate, taskDate) {
-		if nextDate == "" {
-			task.Date = nowDate.Format(timeLayout)
-		} else {
-			task.Date = nextDate
+		task.Date = nextDate
+
+		if task.Date == "" {
+			task.Date = nowDate.Format(db.TimeLayout)
 		}
 	}
 

@@ -1,8 +1,14 @@
 package api
 
-import "net/http"
+import (
+	"net/http"
+)
 
-func Init(mux *http.ServeMux) {
+var password = ""
+
+func Init(mux *http.ServeMux, pass string) {
+	password = pass
+
 	mux.HandleFunc("GET /api/nextdate", nextDayHandler)
 
 	mux.HandleFunc("POST /api/task", auth(addTaskHandler))

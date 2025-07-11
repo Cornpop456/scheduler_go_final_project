@@ -7,7 +7,12 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/Cornpop456/scheduler_go_final_project/pkg/db"
 )
+
+const lastDayIndex = 33
+const predLastDayIndex = 32
 
 func setRepeatWeekDays(weekDay *[8]bool, days []string) error {
 	for _, s := range days {
@@ -102,7 +107,7 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 		return "", errors.New("repeat can't be empty")
 	}
 
-	date, err := time.Parse(timeLayout, dstart)
+	date, err := time.Parse(db.TimeLayout, dstart)
 
 	if err != nil {
 		return "", fmt.Errorf("failed to parse dstart: %w", err)
@@ -175,7 +180,7 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 			}
 		}
 
-		return date.Format(timeLayout), nil
+		return date.Format(db.TimeLayout), nil
 	}
 
 	if afterNow(now, date) {
@@ -190,7 +195,7 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 		}
 	}
 
-	return date.Format(timeLayout), nil
+	return date.Format(db.TimeLayout), nil
 }
 
 func nextDayHandler(w http.ResponseWriter, r *http.Request) {
@@ -202,7 +207,7 @@ func nextDayHandler(w http.ResponseWriter, r *http.Request) {
 	if nowStr == "" {
 		nowTime = time.Now()
 	} else {
-		nowTime, err = time.Parse(timeLayout, nowStr)
+		nowTime, err = time.Parse(db.TimeLayout, nowStr)
 
 		if err != nil {
 			http.Error(w, "Invalid now time format", http.StatusBadRequest)

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/Cornpop456/scheduler_go_final_project/pkg/db"
@@ -37,7 +38,11 @@ func writeJson(w http.ResponseWriter, status int, data any) {
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(status)
-	w.Write(buf.Bytes())
+	_, err := w.Write(buf.Bytes())
+
+	if err != nil {
+		log.Printf("Error writing response: %v", err)
+	}
 }
 
 func writeError(w http.ResponseWriter, status int, message string) {

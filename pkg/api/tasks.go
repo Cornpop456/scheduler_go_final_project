@@ -10,7 +10,7 @@ import (
 func tasksHandler(w http.ResponseWriter, r *http.Request) {
 	search := r.FormValue("search")
 
-	tasks, err := db.Tasks(50, search)
+	tasks, err := db.Tasks(db.TasksLimit, search)
 	if err != nil {
 		writeError(w, http.StatusInternalServerError, fmt.Sprintf("Error fetching tasks: %v", err))
 		return

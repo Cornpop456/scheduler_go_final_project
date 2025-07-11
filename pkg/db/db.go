@@ -21,6 +21,10 @@ CREATE INDEX scheduler_date_index ON scheduler (date);
 
 var db *sql.DB
 
+func Close() {
+	db.Close()
+}
+
 func Init(dbFile string) error {
 	_, err := os.Stat(dbFile)
 

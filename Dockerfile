@@ -9,6 +9,4 @@ ENV TODO_DBFILE=/data/scheduler.db
 ENV TODO_PORT=7540
 ENV TODO_PASSWORD=1234 
 
-EXPOSE 7540
-
 CMD ["./scheduler"]

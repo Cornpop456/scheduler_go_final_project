@@ -13,9 +13,9 @@ func deleteTaskHandler(w http.ResponseWriter, r *http.Request) {
 	if err := db.DeleteTask(id); err != nil {
 		if errors.Is(err, db.ErrWrongId) {
 			writeError(w, http.StatusNotFound, "Task not found")
-		} else {
-			writeError(w, http.StatusInternalServerError, "Failed to delete task")
+			return
 		}
+		writeError(w, http.StatusInternalServerError, "Failed to delete task")
 		return
 	}
 

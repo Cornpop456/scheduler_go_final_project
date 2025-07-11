@@ -6,9 +6,6 @@ import (
 	"time"
 )
 
-const searchDateLayout = "02.01.2006"
-const timeLayout = "20060102"
-
 var ErrWrongId = errors.New("wrong id for task")
 
 type Task struct {
@@ -139,7 +136,7 @@ func Tasks(limit int, search string) ([]*Task, error) {
 	t, err := time.Parse(searchDateLayout, search)
 
 	if err == nil {
-		search = t.Format(timeLayout)
+		search = t.Format(TimeLayout)
 		rows, err = db.Query(queryDate, sql.Named("date", search), sql.Named("limit", limit))
 	} else {
 		search = "%" + search + "%"

@@ -7,7 +7,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"os"
 
 	"github.com/golang-jwt/jwt/v5"
 )
@@ -32,9 +31,7 @@ func authHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	realPassword := os.Getenv("TODO_PASSWORD")
-
-	if authReq.Password != realPassword {
+	if authReq.Password != password {
 		writeError(w, http.StatusUnauthorized, "Invalid password")
 		return
 	}
@@ -54,9 +51,7 @@ func authHandler(w http.ResponseWriter, r *http.Request) {
 
 func auth(next http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		pass := os.Getenv("TODO_PASSWORD")
-
-		if len(pass) > 0 {
+		if len(password) > 0 {
 			var jwtString string
 
 			cookie, err := r.Cookie("token")
@@ -68,7 +63,7 @@ func auth(next http.HandlerFunc) http.HandlerFunc {
 				return
 			}
 
-			hash := sha256.Sum256([]byte(pass))
+			hash := sha256.Sum256([]byte(password))
 			jwtSecret := hex.EncodeToString(hash[:])
 
 			token, err := jwt.Parse(jwtString, func(token *jwt.Token) (interface{}, error) {

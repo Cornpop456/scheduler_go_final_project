@@ -1,0 +1,26 @@
+package server
+
+import (
+	"net/http"
+	"time"
+
+	"github.com/Cornpop456/scheduler_go_final_project/pkg/api"
+)
+
+const webDir = "web"
+
+func New(port string, password string) *http.Server {
+	mux := http.NewServeMux()
+
+	api.Init(mux, password)
+
+	mux.Handle("GET /", http.FileServer(http.Dir(webDir)))
+
+	return &http.Server{
+		Addr:         ":" + port,
+		Handler:      mux,
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 10 * time.Second,
+		IdleTimeout:  60 * time.Second,
+	}
+}
